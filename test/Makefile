@@ -1,5 +1,5 @@
 # Lams's Agenda unittest makefile
-# Version : 0.2 (Updating)
+# Version : 0.3 (Updating)
 # Author : Lams Lupin
 # Email : lams2135@gmail.com
 # Special thanks to Idoit Chuang.
@@ -85,11 +85,15 @@ MeetingManage.o : $(USER_DIR)/MeetingManage.cpp $(USER_DIR)/MeetingManage.h $(GT
 FileManage.o : $(USER_DIR)/FileManage.cpp $(USER_DIR)/FileManage.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/FileManage.cpp
 
+AgendaService.o : $(USER_DIR)/AgendaService.cpp $(USER_DIR)/AgendaService.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/AgendaService.cpp
+
 agenda_unittest.o : agenda_unittest.cc \
                      $(USER_DIR)/Date.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c agenda_unittest.cc
 
 agenda_unittest : Date.o User.o Meeting.o UserManage.o \
                   MeetingManage.o FileManage.o \
+				  AgendaService.o \
 				  agenda_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

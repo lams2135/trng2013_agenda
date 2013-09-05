@@ -12,6 +12,7 @@
 #include "../src/UserManage.h"
 #include "../src/MeetingManage.h"
 #include "../src/FileManage.h"
+#include "../src/AgendaService.h"
 
 TEST(Date,Constructor) {
 	Date a(1993,12,1,13,14);
@@ -66,11 +67,6 @@ TEST(User,FullTest) {
 	EXPECT_EQ("3838438",a.getPhone());
 }
 
-TEST(Meeting,FullTest) {
-	Meeting a();
-	EXPECT_EQ(1,1);
-}
-
 TEST(User,funcFindUserByName) {
 	UserManage *ins = UserManage::getInstance();
 	ins->createUser("Ken","123","213","438");
@@ -92,6 +88,7 @@ TEST(User,funcDeleteUser) {
 	EXPECT_TRUE(ins->deleteUser(User("CTEG","234","ddd","222")));
 	EXPECT_FALSE(ins->deleteUser(User("CTEG","","","")));
 	EXPECT_FALSE(ins->findUserByName("CTEG"));
+	delete ins;
 }
 
 TEST(Meeting,addMeeting) {
@@ -108,6 +105,7 @@ TEST(Meeting,addMeeting) {
 	EXPECT_FALSE(p->addMeeting("a","b",dtmpa_,dtmpb_,"App1"));
 	EXPECT_TRUE(p->addMeeting("Lams","cmsc_",dtmpc_,dtmpe_,"App5"));
 	EXPECT_FALSE(p->addMeeting("Silly","MSTC",dtmpe_,dtmpd_,"App6"));
+	delete p;
 }
 
 TEST(File,User) {
@@ -129,6 +127,7 @@ TEST(File,User) {
 	}
 	EXPECT_TRUE(futst1);
 	EXPECT_TRUE(futst2);
+	delete p;
 }
 
 TEST(File,Meeting) {
@@ -155,6 +154,46 @@ TEST(File,Meeting) {
 	EXPECT_TRUE(fmtst1);
 	EXPECT_TRUE(fmtst2);
 	EXPECT_EQ(dtmpa_,dtmpc_);
+	delete p;
+}
+
+TEST(AgendaService,FullTest) {
+	AgendaService ser;
+	std::string dtmpa_ = Date::dateToString(Date(2013,9,30,13,0));
+	std::string dtmpb_ = Date::dateToString(Date(2013,12,1,0,14));
+	std::string dtmpc_ = Date::dateToString(Date(2012,6,6,0,0));
+	std::string dtmpd_ = Date::dateToString(Date(2013,10,1,0,0));
+	std::string dtmpe_ = Date::dateToString(Date(2013,6,8,0,0));
+	std::string dtmpg_ = Date::dateToString(Date(999,0,0,0,0));
+	std::string dtmph_ = Date::dateToString(Date(1993,9,30,4,68));
+	
+	EXPECT_TRUE(ser.userRegister("Lams","1","2","3"));
+	EXPECT_TRUE(ser.userRegister("cmsc_","1","2","3"));
+	EXPECT_TRUE(ser.userRegister("Idiot","1","2","3"));
+	EXPECT_FALSE(ser.userRegister("cmsc_","1","2","333"));
+
+	EXPECT_FALSE(ser.createMeeting("Lams","K","Idiot",dtmph_,dtmpb_));
+	EXPECT_FALSE(ser.createMeeting("cmsc_","A","Lams",dtmpg_,dtmpa_));
+	EXPECT_TRUE(ser.createMeeting("Lams","A","Idiot",dtmpa_,dtmpb_));
+	EXPECT_FALSE(ser.createMeeting("cmsc_","B","Idiot",dtmpb_,dtmpa_));
+	EXPECT_FALSE(ser.createMeeting("Lams","C","cmsc_",dtmpa_,dtmpb_));
+	EXPECT_FALSE(ser.createMeeting("cmsc_","D","hLR",dtmpa_,dtmpb_));
+	EXPECT_FALSE(ser.createMeeting("cmsc_","A","Idiot",dtmpc_,dtmpe_));
+	EXPECT_TRUE(ser.createMeeting("cmsc_","E","Lams",dtmpc_,dtmpe_));
+	
+	EXPECT_TRUE(ser.meetingQuery("A"));
+	EXPECT_TRUE(ser.meetingQuery("E"));
+	EXPECT_FALSE(ser.meetingQuery("B"));
+	EXPECT_FALSE(ser.meetingQuery("C"));
+	
+	EXPECT_FALSE(ser.deleteMeeting("Lams","F"));
+	EXPECT_TRUE(ser.deleteMeeting("Lams","A"));
+	EXPECT_TRUE(ser.deleteMeeting("cmsc_","E"));
+	EXPECT_FALSE(ser.meetingQuery("A"));
+	EXPECT_FALSE(ser.meetingQuery("E"));
+	EXPECT_FALSE(ser.deleteMeeting("Lams","A"));
+	EXPECT_FALSE(ser.deleteMeeting("Lams","E"));
+
 }
 
 GTEST_API_ int main(int argc, char **argv) {
