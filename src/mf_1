@@ -1,0 +1,10 @@
+OBJS = Date User Meeting UserManage MeetingManage
+
+agenda : $(OBJS)
+#	...
+
+$(OBJS).o : $(OBJS).cpp $(OBJS).h
+	$(CXX) -c $(OBJS).cpp;
+
+clean :
+	rm -f *.o *~
