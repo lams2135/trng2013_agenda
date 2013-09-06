@@ -3,6 +3,16 @@ This is Lams's ss_trng_2013 (Agenda)
 My repo includes a unit test, any can download it for testing.
 Stage-2 source is now avaliable.
 
+If u only want to test your codes, replace src with your codes,
+then run the commands below :
+$ cd test
+$ make run
+
+To check cpplint, you can run cpplint.sh with [class name]
+(eg. AgendaService.cpp) :
+$ cd test
+$ ./cpplint.sh AgendaService
+
 By the way ---
     Stage-3 is comming.
 
